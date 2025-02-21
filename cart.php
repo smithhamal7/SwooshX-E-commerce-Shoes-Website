@@ -1,5 +1,7 @@
-<?php
+<?php 
 session_start();
+include 'db_connect.php';
+$isLoggedIn = isset($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +11,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SwooshX - Cart</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -20,9 +23,7 @@ session_start();
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="cart.php" class="cart-btn">Cart</a></li>
-
-                <!-- If the user is logged in, show Logout -->
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if ($isLoggedIn): ?>
                     <li><a href="logout.php" class="logout-btn">Logout</a></li>
                 <?php else: ?>
                     <li><a href="login.html" class="login-btn">Login</a></li>
@@ -32,38 +33,79 @@ session_start();
     </header>
     
     <section class="cart">
-        <h1>Your Shopping Cart</h1>
+        <h1>Your Cart</h1>
 
-        <?php if (!isset($_SESSION['user_id'])): ?>
-            <p class="login-message">You must <a href="login.html">login</a> to add items to the cart.</p>
-        <?php else: ?>
+        <?php if ($isLoggedIn): ?>
             <div class="cart-items">
-                <div class="cart-item">
-                    <img src="https://via.placeholder.com/100x100?text=Product+1" alt="Product 1">
-                    <div class="item-details">
-                        <h3>Product Name 1</h3>
-                        <p>$120.00</p>
-                        <input type="number" value="1" min="1" class="item-quantity">
-                    </div>
-                    <button class="remove-item">Remove</button>
-                </div>
-                <div class="cart-item">
-                    <img src="https://via.placeholder.com/100x100?text=Product+2" alt="Product 2">
-                    <div class="item-details">
-                        <h3>Product Name 2</h3>
-                        <p>$140.00</p>
-                        <input type="number" value="1" min="1" class="item-quantity">
-                    </div>
-                    <button class="remove-item">Remove</button>
-                </div>
+                <?php
+                $user_id = $_SESSION['user_id'];
+                $sql = "SELECT cart.id, cart.quantity, products.name, products.price, products.image_url FROM cart JOIN products ON cart.product_id = products.id WHERE cart.user_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                $totalPrice = 0;
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $subtotal = $row['price'] * $row['quantity'];
+                        $totalPrice += $subtotal;
+                        ?>
+                        <div class="cart-item" data-cart-id="<?php echo $row['id']; ?>">
+                            <img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['name']; ?>">
+                            <div class="item-details">
+                                <h3><?php echo $row['name']; ?></h3>
+                                <p>Price: <?php echo number_format($row['price'], 2); ?></p>
+                                <p>Quantity: <span class="quantity"><?php echo $row['quantity']; ?></span></p>
+                                <p>Subtotal: <span class="subtotal"><?php echo number_format($subtotal, 2); ?></span></p>
+                            </div>
+                            <button class="remove-item">Remove</button>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo '<p>Your cart is empty.</p>';
+                }
+                ?>
             </div>
+
             <div class="cart-summary">
-                <p>Total: $260.00</p>
-                <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+                <p>Total: <span id="total-price"><?php echo number_format($totalPrice, 2); ?></span></p>
+                <a href="checkout.php" class="checkout-btn">Proceed to Checkout</a>
+            </div>
+        <?php else: ?>
+            <div class="login-message">
+                <p>Please <a href="login.html">log in</a> to view your cart.</p>
             </div>
         <?php endif; ?>
     </section>
 
-    <script src="script.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".remove-item").click(function() {
+                var cartItem = $(this).closest('.cart-item');
+                var cartId = cartItem.data("cart-id");
+
+                $.ajax({
+                    url: "remove.php",
+                    method: "POST",
+                    data: { cart_id: cartId },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success) {
+                            cartItem.remove();
+                            $("#total-price").text(response.new_total);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert("Error removing item.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

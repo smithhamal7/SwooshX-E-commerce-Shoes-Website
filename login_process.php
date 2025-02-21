@@ -1,16 +1,18 @@
 <?php
 session_start();
-include('db.php'); // Make sure this connects to your database
+include('db_connect.php'); // Ensure this file correctly initializes $conn
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Fetch user details from the database
+    // Fetch user details from the database using MySQLi
     $sql = "SELECT * FROM users WHERE email = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
 
     if ($user) {
         // Verify password
@@ -33,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $_SESSION['error'] = "User not found.";
     }
+
+    $stmt->close();
 }
 
 // Redirect back to login page if login fails

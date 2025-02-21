@@ -163,100 +163,259 @@ nav ul li a:hover {
 /* Cart Page Styles */
 .cart {
     padding: 60px 20px;
+    background-color: #f9f9f9;
     text-align: center;
-    background-color: #f4f4f4;
 }
 
 .cart h1 {
-    font-size: 40px;
-    margin-bottom: 40px;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
     color: #222;
 }
 
 .cart-items {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     align-items: center;
+    gap: 20px;
 }
 
+/* Cart Item */
 .cart-item {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
-    width: 80%;
-    max-width: 900px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .cart-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .cart-item img {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 8px;
+    margin-right: 15px;
 }
 
 .item-details {
+    flex-grow: 1;
     text-align: left;
-    margin-left: 20px;
 }
 
 .item-details h3 {
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 5px;
     color: #333;
 }
 
 .item-details p {
-    font-size: 18px;
+    font-size: 16px;
     color: #555;
 }
 
-.item-quantity {
-    width: 60px;
-    padding: 5px;
-    margin-top: 10px;
-}
-
+/* Remove Button */
 .remove-item {
-    background-color: #ff6600;
-    color: #fff;
+    background-color: #e63946;
+    color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease-in-out;
 }
 
 .remove-item:hover {
-    background-color: #cc5200;
+    background-color: #c62828;
 }
 
+/* Cart Summary */
 .cart-summary {
     margin-top: 30px;
     font-size: 22px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
 }
 
+.cart-summary p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Total Price Styling */
+.total-price {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Increased margin to create space above the button */
+    color: #333;
+}
+
+/* Checkout Button */
 .checkout-btn {
+    display: inline-block;
     padding: 12px 24px;
     background-color: #ff6600;
-    color: #fff;
+    color: white;
     text-decoration: none;
-    font-size: 20px;
-    border-radius: 5px;
-    transition: background 0.3s ease;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px; /* Ensures spacing from total text */
 }
 
 .checkout-btn:hover {
     background-color: #cc5200;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .cart-item img {
+        margin-bottom: 10px;
+    }
+
+    .item-details {
+        text-align: center;
+    }
+
+    .cart-summary {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .checkout-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart h1 {
+        font-size: 30px;
+    }
+
+    .cart-item {
+        width: 100%;
+    }
+
+    .cart-summary {
+        font-size: 16px;
+    }
+
+    .checkout-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+/* Checkout Page Styles */
+.checkout {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.checkout-container {
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.checkout h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #222;
+}
+
+/* Payment Options */
+.payment-options {
+    margin-bottom: 20px;
+}
+
+.payment-options label {
+    font-size: 18px;
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.payment-options input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Checkout Button */
+.checkout-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ff6600;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.checkout-btn:hover {
+    background-color: #cc5200;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-container {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .checkout-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout h1 {
+        font-size: 30px;
+    }
+
+    .checkout-container {
+        font-size: 16px;
+    }
+
+    .checkout-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
 
 /* Contact Page Styles */
 .contact {
@@ -457,3 +616,72 @@ textarea {
         font-size: 16px;
     }
 }
+/* Order Management Table Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #e1f5e1;
+}
+
+table td {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+table td a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+table td a:hover {
+    text-decoration: underline;
+}
+
+table .status {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    table th, table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
+

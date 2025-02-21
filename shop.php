@@ -54,6 +54,8 @@ $isLoggedIn = isset($_SESSION['user_id']); // Check if the user is logged in
                     }
                     echo '</div>';
                 }
+            } else {
+                echo '<p>No products found.</p>';
             }
             ?>
         </div>
@@ -63,20 +65,20 @@ $isLoggedIn = isset($_SESSION['user_id']); // Check if the user is logged in
         $(document).ready(function() {
             $(".add-to-cart").click(function() {
                 var productId = $(this).data('product-id');
-                var productName = $(this).data('product-name');
-                var productPrice = $(this).data('product-price');
+                var quantity = 1; // Default quantity
 
                 $.ajax({
-                    url: "add_to_cart.php",
+                    url: "cart_process.php",  // Path to your cart_process.php file
                     method: "POST",
                     data: {
                         product_id: productId,
-                        product_name: productName,
-                        product_price: productPrice,
-                        quantity: 1
+                        quantity: quantity
                     },
                     success: function(response) {
-                        alert(response);
+                        alert(response); // Show success or failure message
+                    },
+                    error: function() {
+                        alert("Error adding to cart.");
                     }
                 });
             });
