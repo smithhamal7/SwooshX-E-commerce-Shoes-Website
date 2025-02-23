@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_connect.php'); // Ensure this connects to your database
+include('db_connect.php'); // Ensure this connects to your database using MySQLi
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.php');
@@ -9,15 +9,21 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 // Handle product addition
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $description = $_POST['description'];
-    $imageUrl = $_POST['image_url']; // Get the image URL from the form
+    $name = trim($_POST['name']);
+    $price = trim($_POST['price']);
+    $imageUrl = trim($_POST['image_url']);
 
-    if (!empty($name) && !empty($price) && !empty($description) && !empty($imageUrl)) {
-        $stmt = $pdo->prepare("INSERT INTO products (name, price, description, image_url, created_at) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->execute([$name, $price, $description, $imageUrl]);
-        $message = "Product added successfully!";
+    if (!empty($name) && !empty($price) && !empty($imageUrl)) {
+        $stmt = $conn->prepare("INSERT INTO products (name, price, image_url, created_at) VALUES (?, ?, ?, NOW())");
+        $stmt->bind_param("sds", $name, $price, $imageUrl);
+        
+        if ($stmt->execute()) {
+            $message = "Product added successfully!";
+        } else {
+            $message = "Error adding product: " . $conn->error;
+        }
+        
+        $stmt->close();
     } else {
         $message = "All fields are required!";
     }
@@ -31,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products</title>
     <style>
-        /* Styles */
         body {
             background: #fafafa;
             color: #333;
@@ -50,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header .logo {
             font-size: 28px;
             font-weight: bold;
-            letter-spacing: 1px;
         }
         nav ul {
             list-style: none;
@@ -63,11 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-decoration: none;
             color: #fff;
             font-size: 16px;
-            letter-spacing: 0.5px;
             transition: color 0.3s ease;
         }
         .dashboard-container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 40px auto;
             padding: 20px;
             background: #fff;
@@ -76,9 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         h1 {
             text-align: center;
-            margin-bottom: 20px;
             font-size: 28px;
-            color: #222;
         }
         .form-container {
             margin-bottom: 30px;
@@ -93,8 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 10px;
             font-size: 16px;
         }
-        .form-container input, .form-container textarea {
-            margin-bottom: 20px;
+        .form-container input {
+            margin-bottom: 15px;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -106,13 +107,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #ff6600;
             color: white;
             font-size: 16px;
-            font-weight: bold;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         .form-container button:hover {
             background-color: #e65c00;
+        }
+        .message {
+            text-align: center;
+            font-size: 16px;
+            color: green;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -133,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="dashboard-container">
     <h1>Manage Products</h1>
     
-    <?php if (isset($message)) echo "<p>$message</p>"; ?>
+    <?php if (isset($message)) echo "<p class='message'>$message</p>"; ?>
     
     <div class="form-container">
         <form method="POST" action="">
@@ -141,8 +147,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="name" required>
             <label>Price:</label>
             <input type="number" step="0.01" name="price" required>
-            <label>Description:</label>
-            <textarea name="description" required></textarea>
             <label>Product Image URL:</label>
             <input type="text" name="image_url" placeholder="Enter image URL" required>
             <button type="submit">Add Product</button>

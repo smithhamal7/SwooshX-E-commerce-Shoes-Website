@@ -51,7 +51,14 @@ $stmt->close();
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li><a href="shop.php">Shop</a></li>
-                <li><a href="cart.php">Cart</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.php" class="cart-btn">Cart</a></li>
+                <?php if ($isLoggedIn): ?>
+                    <li><a href="logout.php" class="logout-btn">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="login.html" class="login-btn">Login</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>

@@ -61,6 +61,8 @@ $messages = $messagesQuery->fetch_all(MYSQLI_ASSOC);
                 <tr style="background: #ff6600; color: #fff;">
                     <th style="padding: 10px; text-align: left;">Name</th>
                     <th style="padding: 10px; text-align: left;">Email</th>
+                    <th style="padding: 10px; text-align: left;">Phone no.</th>
+                    <th style="padding: 10px; text-align: left;">Address</th>
                     <th style="padding: 10px; text-align: left;">Message</th>
                     <th style="padding: 10px; text-align: left;">Date</th>
                 </tr>
@@ -70,6 +72,8 @@ $messages = $messagesQuery->fetch_all(MYSQLI_ASSOC);
                 <tr style="border-bottom: 1px solid #ddd;">
                     <td style="padding: 10px;"> <?php echo htmlspecialchars($message['name']); ?> </td>
                     <td style="padding: 10px;"> <?php echo htmlspecialchars($message['email']); ?> </td>
+                    <td style="padding: 10px;"> <?php echo htmlspecialchars($message['phone']); ?> </td>
+                    <td style="padding: 10px;"> <?php echo htmlspecialchars($message['address']); ?> </td>
                     <td style="padding: 10px;"> <?php echo htmlspecialchars($message['message']); ?> </td>
                     <td style="padding: 10px;"> <?php echo htmlspecialchars($message['created_at']); ?> </td>
                 </tr>

@@ -8,35 +8,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Fetch user details from the database using MySQLi
     $sql = "SELECT * FROM users WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    if ($stmt = $conn->prepare($sql)) {
+        // Bind parameters to the prepared statement
+        $stmt->bind_param("s", $email);
+        
+        // Execute the query
+        $stmt->execute();
+        
+        // Get the result
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        
+        if ($user) {
+            // Verify password
+            if (password_verify($password, $user['password'])) {
+                // Set session variables
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['role'] = $user['role'];
 
-    if ($user) {
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            // Set session variables
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['role'] = $user['role'];
-
-            // Redirect based on role
-            if ($user['role'] === 'admin') {
-                header("Location: admin_dashboard.php");
+                // Redirect based on role
+                if ($user['role'] === 'admin') {
+                    header("Location: admin_dashboard.php");
+                } else {
+                    header("Location: home.php");
+                }
+                exit();
             } else {
-                header("Location: home.php");
+                $_SESSION['error'] = "Invalid password.";
             }
-            exit();
         } else {
-            $_SESSION['error'] = "Invalid password.";
+            $_SESSION['error'] = "User not found.";
         }
-    } else {
-        $_SESSION['error'] = "User not found.";
-    }
 
-    $stmt->close();
+        // Close the statement
+        $stmt->close();
+    } else {
+        // Handle SQL preparation errors
+        $_SESSION['error'] = "Error preparing the SQL query.";
+    }
 }
 
 // Redirect back to login page if login fails

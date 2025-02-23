@@ -34,7 +34,7 @@ session_start();
     <section class="hero">
         <h1>Step Into Style with SwooshX</h1>
         <p>Find the best shoes for every occasion.</p>
-        <a href="shop.html" class="cta-button">Shop Now</a>
+        <a href="shop.php" class="cta-button">Shop Now</a>
     </section>
 
     <script src="script.js"></script>

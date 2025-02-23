@@ -40,7 +40,10 @@ if (!$order) {
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li><a href="shop.php">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
                 <li><a href="cart.php">Cart</a></li>
+
             </ul>
         </nav>
     </header>
@@ -51,6 +54,7 @@ if (!$order) {
         <p><strong>Transaction ID:</strong> <?php echo $order['transaction_id']; ?></p>
         <p><strong>Total Amount:</strong> NPR <?php echo number_format($order['total_amount'], 2); ?></p>
         <p><strong>Payment Status:</strong> <?php echo $order['payment_status']; ?></p>
+        <h3>PLEASE CONTACT US WITH YOUR ORDER DETAILS AND TRANSACTION ID </h3>
         <br>
         <a href="home.php" class="btn">Return to Home</a>
     </section>
