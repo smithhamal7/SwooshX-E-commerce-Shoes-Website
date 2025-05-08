@@ -47,7 +47,7 @@ session_start();
 <<section class="hero">
     <div class="banner-wrapper">
         <div class="banner-slide">
-            <img src="images/banner.jpg" alt="Hero Banner" class="hero-image">
+            <img src="banner.jpg" alt="Hero Banner" class="hero-image">
             <div class="banner-caption">
                 <h1>Step Into Style with SwooshX</h1>
                 <p>Find the best shoes for every occasion.</p>
